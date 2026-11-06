@@ -38,6 +38,25 @@ public class MainActivity extends Activity implements SensorEventListener {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (acelerometro != null) {
+            sensorManager.registerListener(
+                    this,
+                    acelerometro,
+                    SensorManager.SENSOR_DELAY_UI
+            );
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        sensorManager.unregisterListener(this);
+    }
+
+    @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             float x = event.values[0];
@@ -50,11 +69,11 @@ public class MainActivity extends Activity implements SensorEventListener {
 
             String direcao;
             if (Math.abs(x) > Math.abs(y) && Math.abs(x) > 2.0f) {
-                direcao = x > 0 ? "Inclinação para a direita/esquerda (eixo X)" :
-                        "Inclinação no sentido oposto (eixo X)";
+                direcao = x > 0 ? "Inclinação para a esquerda (eixo X)" :
+                        "Inclinação para a direita (eixo X)";
             } else if (Math.abs(y) > 2.0f) {
-                direcao = y > 0 ? "Inclinação em um sentido (eixo Y)" :
-                        "Inclinação no sentido oposto (eixo Y)";
+                direcao = y > 0 ? "Inclinação pra cima (eixo Y)" :
+                        "Inclinação pra baixo (eixo Y)";
             } else {
                 direcao = "Aparelho relativamente estável";
             }
